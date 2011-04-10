@@ -15,18 +15,42 @@ public class WhileInterpreter {
      * Main method for an interpreter for the While language.
      */
     public static void main(String[] args) {
-        String line = null;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        WhileParser parser = null;
         Log.setLogger(new StreamLogger(System.err));
 
+        if (args.length > 0) {
+            try {
+                WhileParser parser = new WhileParser(new FileReader(args[0]));
+                Program program = parser.program("");
+            } catch (ParseException e) {
+                Log.logFatal("Parsing failed.");
+                Log.logFatal(e.getMessage());
+                System.exit(1);
+            } catch (IOException e) {
+                Log.logFatal(e.getMessage());
+                System.exit(1);
+            }
+        } else {
+            if (interactivePrompt() != 0)
+                System.exit(1);
+        }
+
+        System.exit(0);
+    }
+
+    /**
+     * Run an interactive prompt, evaluating each line of code in input.
+     */
+    private static int interactivePrompt() {
+        String line = null;
+        WhileParser parser = null;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("> ");
 
         try {
             line = reader.readLine();
         } catch (IOException e) {
             Log.logFatal(String.format("IOError: %s", e.getMessage()));
-            System.exit(1);
+            return 1;
         }
 
         while (line != null) {
@@ -47,11 +71,11 @@ public class WhileInterpreter {
                 line = reader.readLine();
             } catch (IOException e) {
                 Log.logFatal(String.format("IOError: %s", e.getMessage()));
-                System.exit(1);
+                return 1;
             }
         }
 
         System.out.println();
-        System.exit(0);
+        return 0;
     }
 }
