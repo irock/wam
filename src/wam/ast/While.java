@@ -6,6 +6,9 @@
 
 package wam.ast;
 
+import wam.exception.*;
+import wam.visitor.*;
+
 public class While extends Statement {
     /**
      * The condition that decides whether the loop should continue.
@@ -42,5 +45,10 @@ public class While extends Statement {
      */
     public Statement getStatement() {
         return statement;
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

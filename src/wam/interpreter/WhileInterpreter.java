@@ -7,6 +7,8 @@ package wam.interpreter;
 import java.io.*;
 import wam.log.*;
 import wam.ast.*;
+import wam.exception.*;
+import wam.visitor.*;
 import wam.parser.WhileParser;
 import wam.parser.ParseException;
 
@@ -21,11 +23,17 @@ public class WhileInterpreter {
             try {
                 WhileParser parser = new WhileParser(new FileReader(args[0]));
                 Program program = parser.program("");
+
+                PrettyWhilePrinter visitor = new PrettyWhilePrinter();
+                System.out.println(program.accept(visitor));
             } catch (ParseException e) {
                 Log.logFatal("Parsing failed.");
                 Log.logFatal(e.getMessage());
                 System.exit(1);
             } catch (IOException e) {
+                Log.logFatal(e.getMessage());
+                System.exit(1);
+            } catch (WamException e) {
                 Log.logFatal(e.getMessage());
                 System.exit(1);
             }

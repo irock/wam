@@ -8,6 +8,8 @@
 package wam.ast;
 
 import java.util.List;
+import wam.exception.*;
+import wam.visitor.*;
 
 public class CompoundStatement extends Statement {
     /**
@@ -31,5 +33,10 @@ public class CompoundStatement extends Statement {
      */
     public List<Statement> getStatements() {
         return statements;
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

@@ -8,6 +8,8 @@
 package wam.ast;
 
 import wam.util.*;
+import wam.exception.*;
+import wam.visitor.*;
 
 public class BinaryOperation extends Operation {
     /**
@@ -46,5 +48,10 @@ public class BinaryOperation extends Operation {
      */
     public Expression getRightHand() {
         return right;
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

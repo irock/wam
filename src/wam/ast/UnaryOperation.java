@@ -7,6 +7,8 @@
 package wam.ast;
 
 import wam.util.*;
+import wam.exception.*;
+import wam.visitor.*;
 
 public class UnaryOperation extends Operation {
     /**
@@ -31,5 +33,10 @@ public class UnaryOperation extends Operation {
      */
     public Expression getExpression() {
         return exp;
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

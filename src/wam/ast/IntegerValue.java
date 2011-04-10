@@ -6,6 +6,9 @@
 
 package wam.ast;
 
+import wam.exception.*;
+import wam.visitor.*;
+
 public class IntegerValue extends Value {
     /**
      * The value of the integer that this represents.
@@ -23,7 +26,15 @@ public class IntegerValue extends Value {
         this.value = value;
     }
 
+    /**
+     * @return the integer value.
+     */
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

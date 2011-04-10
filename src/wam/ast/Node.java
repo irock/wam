@@ -1,9 +1,13 @@
 /**
  * Node.java
  *
+ * Base class for the AST nodes.
  */
 
 package wam.ast;
+
+import wam.exception.*;
+import wam.visitor.*;
 
 public abstract class Node {
     /**
@@ -32,5 +36,14 @@ public abstract class Node {
      */
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    /**
+     * Visit the visitor given.
+     *
+     * @param visitor The visitor to visit.
+     */
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

@@ -6,6 +6,9 @@
 
 package wam.ast;
 
+import wam.exception.*;
+import wam.visitor.*;
+
 public class Identifier extends Value {
     /**
      * The name of the identifier.
@@ -25,5 +28,10 @@ public class Identifier extends Value {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

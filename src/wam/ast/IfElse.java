@@ -6,6 +6,9 @@
 
 package wam.ast;
 
+import wam.exception.*;
+import wam.visitor.*;
+
 public class IfElse extends Statement {
     /**
      * The condition decides whether to execute the ifStatement or the
@@ -58,5 +61,10 @@ public class IfElse extends Statement {
      */
     public Statement getElseStatement() {
         return elseStatement;
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

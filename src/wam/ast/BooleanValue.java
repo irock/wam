@@ -6,6 +6,9 @@
 
 package wam.ast;
 
+import wam.exception.*;
+import wam.visitor.*;
+
 public class BooleanValue extends Value {
     /**
      * The value of the boolean this value represents.
@@ -23,7 +26,15 @@ public class BooleanValue extends Value {
         this.value = value;
     }
 
+    /**
+     * @return the boolean value of this object.
+     */
     public boolean getValue() {
         return value;
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

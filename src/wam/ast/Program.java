@@ -6,6 +6,9 @@
 
 package wam.ast;
 
+import wam.exception.*;
+import wam.visitor.*;
+
 public class Program extends Node {
     /**
      * The source of the program, i.e.\ the textual representation of the whole
@@ -28,5 +31,17 @@ public class Program extends Node {
         super(0);
         this.source = source;
         this.entry = entry;
+    }
+
+    /**
+     * @return the entry point of the program.
+     */
+    public Statement getEntry() {
+        return entry;
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

@@ -7,6 +7,9 @@
 
 package wam.ast;
 
+import wam.exception.*;
+import wam.visitor.*;
+
 public class Skip extends Statement {
     /**
      * Create a new Skip statement.
@@ -15,5 +18,10 @@ public class Skip extends Statement {
      */
     public Skip(int lineNumber) {
         super(lineNumber);
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }

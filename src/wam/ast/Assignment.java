@@ -6,6 +6,9 @@
 
 package wam.ast;
 
+import wam.exception.*;
+import wam.visitor.*;
+
 public class Assignment extends Statement {
     /**
      * The identifier this Assignment assigns its value to.
@@ -30,5 +33,24 @@ public class Assignment extends Statement {
 
         this.id = id;
         this.value = value;
+    }
+
+    /**
+     * @return the left hand part of this assignment.
+     */
+    public Identifier getIdentifier() {
+        return id;
+    }
+
+    /**
+     * @return the right hand part of this assignment.
+     */
+    public Expression getValue() {
+        return value;
+    }
+
+    @Override
+    public <T> T accept(WhileVisitor<T> visitor) throws WamException {
+        return visitor.visit(this);
     }
 }
