@@ -1,0 +1,331 @@
+PARSER_BEGIN(WhileParser)
+
+package wam.parser;
+
+import java.io.*;
+import java.util.*;
+import wam.ast.*;
+import wam.util.*;
+
+public class WhileParser { }
+
+PARSER_END(WhileParser)
+
+SKIP :
+{
+    " " | "\r" | "\n" | "\t" |
+    <"#" ( ~[ "\r" , "\n" ] )*>
+}
+
+TOKEN :
+{
+    < PLUS   : "+"             > |
+    < MINUS  : "-"             > |
+    < MULT   : "*"             > |
+    < EQ     : "="             > |
+    < LT     : "≤" | "<="      > |
+    < NOT    : "~" | "¬" | "!" > |
+    < AND    : "&" | "∧"       > |
+    < ASSIGN : ":="            > |
+
+    < SKIPS  : "skip"  > |
+    < IF     : "if"    > |
+    < THEN   : "then"  > |
+    < ELSE   : "else"  > |
+    < WHILE  : "while" > |
+    < DO     : "do"    > |
+
+    < BOOL   : <TRUE>|<FALSE> > |
+    < INT    : (<DIGIT>)+ > |
+    < ID     : (<ALPHA>(<ALPHA>|<DIGIT>)*) > |
+
+    < #DIGIT : ["0"-"9"] > |
+    < #ALPHA : (["a"-"z"]|["A"-"Z"]|"_") > |
+    < #TRUE  : "true" > |
+    < #FALSE : "false" >
+}
+
+Program program(String source) :
+{
+    Statement stm;
+}
+{
+    stm = statementList()
+
+    { return new Program(source, stm); }
+}
+
+Statement statementList() :
+{
+    Statement stm;
+    List<Statement> stms;
+}
+{
+    { stms = new LinkedList<Statement>(); }
+
+    stm = statement()
+
+    { stms.add(stm); }
+
+    (
+        ";" stm = statement()
+
+        { stms.add(stm); }
+    )*
+
+    { return new CompoundStatement(stms, stms.get(0).getLineNumber()); }
+}
+
+Statement statement() :
+{
+    Statement stm;
+}
+{
+    (
+        (
+            stm = nestedStatement()
+        ) |
+        (
+            stm = skip()
+        ) |
+        (
+            stm = ifThenElse()
+        ) |
+        (
+            stm = whileDo()
+        ) |
+        (
+            stm = assignment()
+        )
+    )
+
+    { return stm; }
+}
+
+Statement nestedStatement() :
+{
+    Statement stm;
+}
+{
+    "(" stm = statementList() ")"
+
+    { return stm; }
+}
+
+Skip skip() :
+{
+    Skip skip;
+    Token tmp;
+}
+{
+    tmp = <SKIPS>
+
+    { return new Skip(tmp.beginLine); }
+}
+
+IfElse ifThenElse() :
+{
+    Token tmp;
+    Expression cond;
+    Statement ifStm, elseStm;
+}
+{
+    tmp = <IF> cond = Bexp() <THEN>
+        ifStm = statementList()
+    <ELSE>
+        elseStm = statementList()
+
+    { return new IfElse(cond, ifStm, elseStm, tmp.beginLine); }
+}
+
+While whileDo() :
+{
+    Token tmp;
+    Expression cond;
+    Statement stm;
+}
+{
+    tmp = <WHILE> cond = Bexp() <DO> stm = statementList()
+
+    { return new While(cond, stm, tmp.beginLine); }
+}
+
+Assignment assignment() :
+{
+    Token tmp;
+    Identifier id;
+    Expression exp;
+}
+{
+    tmp = <ID> <ASSIGN> exp = Aexp()
+
+    { return new Assignment(new Identifier(tmp.toString(), tmp.beginLine), exp, tmp.beginLine); }
+}
+
+Expression Bexp() :
+{
+    Expression cond, next;
+    Operator op = null;
+    boolean unary = false;
+}
+{
+    (
+        (
+            ( op = unaryBop() )?
+
+            (( "(" cond = Bexp() ")" ) | ( cond = Bvalue() ))
+
+            {
+                if (op != null)
+                    cond = new UnaryOperation(op, cond, cond.getLineNumber());
+            }
+
+            (
+                op = binaryBooleanBop()
+                next = Bexp()
+
+                { cond = new BinaryOperation(op, cond, next, cond.getLineNumber()); }
+            )?
+        ) |
+        (
+            cond = Aexp()
+            op = binaryIntegralBop()
+            next = Aexp()
+
+            { cond = new BinaryOperation(op, cond, next, cond.getLineNumber()); }
+        )
+    )
+
+    { return cond; }
+}
+
+Value Bvalue() :
+{
+    Token tmp;
+}
+{
+    tmp = <BOOL>
+    
+    { return new BooleanValue(Boolean.getBoolean(tmp.toString()), tmp.beginLine); }
+}
+
+Operator unaryBop() :
+{
+}
+{
+    <NOT>
+
+    { return Operator.NOT; }
+}
+
+Operator binaryBooleanBop() :
+{
+}
+{
+    <AND>
+
+    { return Operator.AND; }
+}
+
+Operator binaryIntegralBop() :
+{
+    Operator op;
+}
+{
+    (
+        (
+            <EQ>
+            { op = Operator.EQ; }
+        ) |
+        (
+            <LT>
+            { op = Operator.LT; }
+        )
+    )
+
+    { return op; }
+}
+
+Expression Aexp() :
+{
+    Expression exp, next;
+    Operator op;
+}
+{
+    (
+        (
+            exp = nestedAexp()
+        ) |
+        (
+            exp = Avalue()
+        )
+    )
+
+    (
+        op = Aop()
+        next = Aexp()
+
+        { exp = new BinaryOperation(op, exp, next, exp.getLineNumber()); }
+    )?
+
+    { return exp; }
+}
+
+Operator Aop() :
+{
+    Operator op;
+}
+{
+    (
+        (
+            <PLUS>
+            { op = Operator.ADD; }
+        ) |
+        (
+            <MINUS>
+            { op = Operator.SUB; }
+        ) |
+        (
+            <MULT>
+            { op = Operator.MUL; }
+        )
+    )
+
+    { return op; }
+}
+
+Value Avalue() :
+{
+    Value value;
+    Token tmp;
+    int sign = 1;
+}
+{
+    (
+        (
+            (
+                <MINUS>
+                { sign = -1; }
+            )?
+
+            tmp = <INT>
+            { value = new IntegerValue(sign*Integer.parseInt(tmp.toString()), tmp.beginLine); }
+        ) |
+        (
+            tmp = <ID>
+            { value = new Identifier(tmp.toString(), tmp.beginLine); }
+        )
+    )
+
+    { return value; }
+}
+
+Expression nestedAexp() :
+{
+    Expression exp;
+}
+{
+    "(" exp = Aexp() ")"
+
+    { return exp; }
+}
