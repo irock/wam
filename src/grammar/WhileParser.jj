@@ -206,7 +206,7 @@ Value Bvalue() :
 {
     tmp = <BOOL>
     
-    { return new BooleanValue(Boolean.getBoolean(tmp.toString()), tmp.beginLine); }
+    { return new BooleanValue(Boolean.parseBoolean(tmp.toString()), tmp.beginLine); }
 }
 
 Operator unaryBop() :
