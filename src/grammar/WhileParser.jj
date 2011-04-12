@@ -23,7 +23,7 @@ TOKEN :
     < MINUS  : "-"             > |
     < MULT   : "*"             > |
     < EQ     : "="             > |
-    < LT     : "≤" | "<="      > |
+    < LE     : "≤" | "<="      > |
     < NOT    : "~" | "¬" | "!" > |
     < AND    : "&" | "∧"       > |
     < ASSIGN : ":="            > |
@@ -238,8 +238,8 @@ Operator binaryIntegralBop() :
             { op = Operator.EQ; }
         ) |
         (
-            <LT>
-            { op = Operator.LT; }
+            <LE>
+            { op = Operator.LE; }
         )
     )
 

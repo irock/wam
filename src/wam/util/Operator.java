@@ -12,7 +12,7 @@ public enum Operator {
     SUB("-"),
     MUL("*"),
     EQ ("="),
-    LT ("≤"),
+    LE ("≤"),
     AND("∧"),
     NOT("¬");
 
