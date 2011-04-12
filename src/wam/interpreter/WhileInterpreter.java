@@ -5,8 +5,11 @@
 package wam.interpreter;
 
 import java.io.*;
+import java.util.*;
+
 import wam.log.*;
 import wam.ast.*;
+import wam.code.*;
 import wam.exception.*;
 import wam.visitor.*;
 import wam.parser.WhileParser;
@@ -26,6 +29,10 @@ public class WhileInterpreter {
 
                 PrettyWhilePrinter visitor = new PrettyWhilePrinter();
                 System.out.println(program.accept(visitor));
+
+                WhileTranslator translator = new WhileTranslator();
+                Stack<Instruction> code = program.accept(translator);
+                System.out.println(Instruction.codeToString(code));
             } catch (ParseException e) {
                 Log.logFatal("Parsing failed.");
                 Log.logFatal(e.getMessage());
