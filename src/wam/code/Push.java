@@ -8,6 +8,7 @@
 package wam.code;
 
 import wam.ast.Node;
+import wam.vm.*;
 
 public class Push extends Instruction {
     /**
@@ -25,9 +26,14 @@ public class Push extends Instruction {
         super(node, Instruction.Type.PUSH);
         this.value = value;
     }
-    
+
     @Override
     public String toString() {
         return String.format("PUSH-(%d)", value);
+    }
+
+    @Override
+    public void execute(Configuration config) {
+        config.getOperands().push(new IntegerOperand(value));
     }
 }

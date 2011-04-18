@@ -7,6 +7,8 @@
 package wam.code;
 
 import wam.ast.Node;
+import wam.exception.*;
+import wam.vm.*;
 
 public class Store extends Instruction {
     /**
@@ -28,5 +30,15 @@ public class Store extends Instruction {
     @Override
     public String toString() {
         return String.format("STORE-%s", id);
+    }
+
+    @Override
+    public void execute(Configuration config) throws OperandMisMatchException {
+        Operand operand = config.getOperands().pop();
+
+        if (!operand.getType().equals(Operand.Type.Integer))
+            throw new OperandMisMatchException(Operand.Type.Integer.toString(), operand.getType().toString());
+
+        config.getState().set(id, ((IntegerOperand)operand).getValue());
     }
 }

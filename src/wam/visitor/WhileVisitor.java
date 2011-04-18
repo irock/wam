@@ -14,7 +14,7 @@ import wam.exception.*;
 public abstract class WhileVisitor<T> {
     /**
      * Visit a node and perform node specific actions.
-     * 
+     *
      * @param node The node to operate on.
      */
     public T visit(final Node node) throws WamException {

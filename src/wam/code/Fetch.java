@@ -7,6 +7,7 @@
 package wam.code;
 
 import wam.ast.Node;
+import wam.vm.*;
 
 public class Fetch extends Instruction {
     /**
@@ -28,5 +29,11 @@ public class Fetch extends Instruction {
     @Override
     public String toString() {
         return String.format("FETCH-%s", id);
+    }
+
+    @Override
+    public void execute(Configuration config) {
+        int value = config.getState().get(id);
+        config.getOperands().push(new IntegerOperand(value));
     }
 }

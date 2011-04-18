@@ -12,6 +12,7 @@ import wam.ast.*;
 import wam.code.*;
 import wam.exception.*;
 import wam.visitor.*;
+import wam.vm.*;
 import wam.parser.WhileParser;
 import wam.parser.ParseException;
 
@@ -33,6 +34,14 @@ public class WhileInterpreter {
                 WhileTranslator translator = new WhileTranslator();
                 Stack<Instruction> code = program.accept(translator);
                 System.out.println(Instruction.codeToString(code));
+
+                VirtualMachine machine = new VirtualMachine();
+                Configuration configuration = new Configuration(code);
+
+                while (!configuration.isFinal()) {
+                    configuration = machine.step(configuration);
+                }
+                System.out.println(configuration.getState());
             } catch (ParseException e) {
                 Log.logFatal("Parsing failed.");
                 Log.logFatal(e.getMessage());

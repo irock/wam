@@ -30,7 +30,7 @@ public class Log {
     public static void log(Level level, String message) {
         logger.log(level, message);
     }
-    
+
     /**
      * Log the given message with fatal level.
      *

@@ -9,6 +9,8 @@ package wam.code;
 import java.util.*;
 
 import wam.ast.Node;
+import wam.vm.*;
+import wam.exception.*;
 
 public class Branch extends Instruction {
     /**
@@ -51,10 +53,19 @@ public class Branch extends Instruction {
     public Stack<Instruction> getElseCode() {
         return elseCode;
     }
-    
+
     @Override
     public String toString() {
         return String.format("BRANCH(%s, %s)", Instruction.codeToString(ifCode),
                 Instruction.codeToString(elseCode));
+    }
+
+    @Override
+    public void execute(Configuration config) throws OperandMisMatchException {
+        if (!config.getOperands().peek().getType().equals(Operand.Type.Boolean))
+            throw new OperandMisMatchException(Operand.Type.Boolean.toString(), config.getOperands().peek().getType().toString());
+
+        BooleanOperand op = (BooleanOperand)config.getOperands().pop();
+        config.getInstructions().addAll(op.getValue() ? ifCode : elseCode);
     }
 }

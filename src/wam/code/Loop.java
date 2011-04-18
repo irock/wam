@@ -10,6 +10,8 @@ package wam.code;
 import java.util.*;
 
 import wam.ast.Node;
+import wam.exception.*;
+import wam.vm.*;
 
 public class Loop extends Instruction {
     /**
@@ -54,4 +56,17 @@ public class Loop extends Instruction {
         return String.format("LOOP(%s, %s)", Instruction.codeToString(conditionCode),
                 Instruction.codeToString(loopCode));
     }
+
+    @Override
+    public void execute(Configuration config) {
+        Stack<Instruction> ifCode = new Stack<Instruction>();
+        ifCode.push(this);
+        ifCode.addAll(loopCode);
+
+        Stack<Instruction> elseCode = new Stack<Instruction>();
+        elseCode.push(new Instruction(node, Instruction.Type.SKIP));
+
+        config.getInstructions().push(new Branch(node, ifCode, elseCode));
+        config.getInstructions().addAll(conditionCode);
+   }
 }
