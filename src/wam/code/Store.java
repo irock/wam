@@ -29,6 +29,11 @@ public class Store extends Instruction {
 
     @Override
     public String toString() {
+        return toShortString();
+    }
+
+    @Override
+    public String toShortString() {
         return String.format("STORE-%s", id);
     }
 
