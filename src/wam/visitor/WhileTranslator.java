@@ -56,6 +56,14 @@ public class WhileTranslator extends WhileVisitor<Stack<Instruction>> {
     }
 
     @Override
+    public Stack<Instruction> visit(final TryStatement t) throws WamException {
+        Stack<Instruction> code = new Stack<Instruction>();
+        code.push(new Try(t, t.getTryStatement().accept(this),
+                    new Catch(t.getCatchStatement(), t.getCatchStatement().accept(this))));
+        return code;
+    }
+
+    @Override
     public Stack<Instruction> visit(final BinaryOperation bo) throws WamException {
         Stack<Instruction> code = new Stack<Instruction>();
         code.push(new Instruction(bo, Instruction.operatorToType(bo.getOperator())));

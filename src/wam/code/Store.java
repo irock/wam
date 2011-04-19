@@ -44,6 +44,7 @@ public class Store extends Instruction {
         if (!operand.getType().equals(Operand.Type.Integer))
             throw new OperandMisMatchException(Operand.Type.Integer.toString(), operand.getType().toString());
 
-        config.getState().set(id, ((IntegerOperand)operand).getValue());
+        if (config.getState().isNormal())
+            config.getState().set(id, ((IntegerOperand)operand).getValue());
     }
 }

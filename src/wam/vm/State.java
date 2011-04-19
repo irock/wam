@@ -17,12 +17,19 @@ public class State {
     private Map<String,Integer> values;
 
     /**
+     * A flag telling whether the state is normal or abnormal (in an
+     * exceptional state).
+     */
+    private boolean isNormal;
+
+    /**
      * Create a new State with the given default configuration.
      *
      * @param value The default state space.
      */
     public State(Map<String,Integer> values) {
         this.values = new TreeMap<String,Integer>(values);
+        this.isNormal = true;
     }
 
     /**
@@ -30,6 +37,7 @@ public class State {
      */
     public State(State state) {
         this.values = new TreeMap<String,Integer>(state.values);
+        this.isNormal = state.isNormal;
     }
 
     /**
@@ -37,6 +45,7 @@ public class State {
      */
     public State() {
         this.values = new TreeMap<String,Integer>();
+        this.isNormal = true;
     }
 
     /**
@@ -56,6 +65,22 @@ public class State {
      */
     public void set(String name, Integer value) {
         values.put(name, value);
+    }
+
+    /**
+     * Set the abnormal flag in the state.
+     *
+     * @param value The new value of the isNormal field.
+     */
+    public void setIsNormal(boolean value) {
+        isNormal = value;
+    }
+
+    /**
+     * @return true iff this state is in a normal state.
+     */
+    public boolean isNormal() {
+        return isNormal;
     }
 
     @Override

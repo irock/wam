@@ -23,11 +23,14 @@ public class Instruction {
         STORE,
         LOOP,
         BRANCH,
+        TRY,
+        CATCH,
 
         SKIP,
         ADD,
         SUB,
         MULT,
+        DIV,
         EQ,
         LE,
         AND,
@@ -90,6 +93,8 @@ public class Instruction {
                 return Type.SUB;
             case MUL:
                 return Type.MULT;
+            case DIV:
+                return Type.DIV;
             case EQ:
                 return Type.EQ;
             case LE:
@@ -154,6 +159,7 @@ public class Instruction {
             case ADD:
             case SUB:
             case MULT:
+            case DIV:
             case EQ:
             case LE:
                 executeBinaryIntegerOperation(config);
@@ -198,6 +204,13 @@ public class Instruction {
                 break;
             case MULT:
                 result = new IntegerOperand(left * right);
+                break;
+            case DIV:
+                if (right == 0) {
+                    config.getState().setIsNormal(false);
+                    result = new IntegerOperand(0);
+                } else
+                    result = new IntegerOperand(left / right);
                 break;
             case LE:
                 result = new BooleanOperand(left <= right);

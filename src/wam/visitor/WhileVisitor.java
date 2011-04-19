@@ -53,6 +53,12 @@ public abstract class WhileVisitor<T> {
         return null;
     }
 
+    public T visit(final TryStatement t) throws WamException {
+        T tmp = t.getTryStatement().accept(this);
+        t.getCatchStatement().accept(this);
+        return tmp;
+    }
+
     public T visit(final BinaryOperation bo) throws WamException {
         bo.getLeftHand().accept(this);
         return bo.getRightHand().accept(this);

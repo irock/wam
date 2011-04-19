@@ -74,7 +74,9 @@ public class Branch extends Instruction {
         if (!operand.getType().equals(Operand.Type.Boolean))
             throw new OperandMisMatchException(Operand.Type.Boolean.toString(), operand.getType().toString());
 
-        BooleanOperand op = (BooleanOperand)operand;
-        config.getInstructions().addAll(op.getValue() ? ifCode : elseCode);
+        if (config.getState().isNormal()) {
+            BooleanOperand op = (BooleanOperand)operand;
+            config.getInstructions().addAll(op.getValue() ? ifCode : elseCode);
+        }
     }
 }

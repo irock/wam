@@ -66,6 +66,9 @@ public class Loop extends Instruction {
 
     @Override
     public void execute(Configuration config) {
+        if (!config.getState().isNormal())
+            return;
+
         Stack<Instruction> ifCode = new Stack<Instruction>();
         ifCode.push(this);
         ifCode.addAll(loopCode);

@@ -70,6 +70,16 @@ public class PrettyWhilePrinter extends WhileVisitor<String> {
     }
 
     @Override
+    public String visit(final TryStatement s) throws WamException {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("try ");
+        buffer.append(s.getTryStatement().accept(this));
+        buffer.append(" catch ");
+        buffer.append(s.getCatchStatement().accept(this));
+        return buffer.toString();
+    }
+
+    @Override
     public String visit(final BinaryOperation bo) throws WamException {
         StringBuffer buffer = new StringBuffer();
         buffer.append("(");
