@@ -58,6 +58,13 @@ public class Loop extends Instruction {
     }
 
     @Override
+    public String toShortString() {
+        return String.format("LOOP(%s, %s)",
+                Instruction.codeToShortString(conditionCode, 1),
+                Instruction.codeToShortString(loopCode, 1));
+    }
+
+    @Override
     public void execute(Configuration config) {
         Stack<Instruction> ifCode = new Stack<Instruction>();
         ifCode.push(this);

@@ -28,6 +28,11 @@ public class Fetch extends Instruction {
 
     @Override
     public String toString() {
+        return toShortString();
+    }
+
+    @Override
+    public String toShortString() {
         return String.format("FETCH-%s", id);
     }
 

@@ -70,6 +70,13 @@ public class Instruction {
     }
 
     /**
+     * @return a short string representation of this instruction.
+     */
+    public String toShortString() {
+        return type.toString();
+    }
+
+    /**
      * Convert an Operator type to an Instruction type.
      *
      * @param op The operator to convert.
@@ -104,17 +111,31 @@ public class Instruction {
      * @return The code given in a more readable form.
      */
     public static String codeToString(Stack<Instruction> code) {
-        boolean first = true;
+        return codeToShortString(code, code.size());
+    }
+
+    /**
+     * Convert a code stack to a short string. The maximum number of
+     * instructions to print in full is limited by the limit parameter.
+     *
+     * @param code The code stack to convert to a string.
+     * @param limit The maximum number of instructions to print.
+     * @return The code given in a more readable form.
+     */
+    public static String codeToShortString(Stack<Instruction> code, int limit) {
         StringBuffer buffer = new StringBuffer();
 
-        for (int i = code.size()-1; i >= 0; i--) {
-            Instruction ins = code.get(i);
-            if (first)
-                first = false;
-            else
-                buffer.append(" : ");
+        if (code.size() == 0)
+            buffer.append("ε");
+        else {
+            for (int i = 0; i < code.size() && i < limit; i++) {
+                if (i != 0)
+                    buffer.append(":");
+                buffer.append(code.get(code.size()-1-i).toShortString());
+            }
 
-            buffer.append(ins.toString());
+            if (code.size() > limit)
+                buffer.append(":c");
         }
 
         return buffer.toString();

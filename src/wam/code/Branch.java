@@ -61,6 +61,13 @@ public class Branch extends Instruction {
     }
 
     @Override
+    public String toShortString() {
+        return String.format("BRANCH(%s, %s)",
+                Instruction.codeToShortString(ifCode, 1),
+                Instruction.codeToShortString(elseCode, 1));
+    }
+
+    @Override
     public void execute(Configuration config) throws OperandMisMatchException {
         if (!config.getOperands().peek().getType().equals(Operand.Type.Boolean))
             throw new OperandMisMatchException(Operand.Type.Boolean.toString(), config.getOperands().peek().getType().toString());

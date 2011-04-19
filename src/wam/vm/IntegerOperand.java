@@ -28,4 +28,9 @@ public class IntegerOperand extends Operand {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%d", value);
+    }
 }

@@ -29,6 +29,11 @@ public class Push extends Instruction {
 
     @Override
     public String toString() {
+        return toShortString();
+    }
+
+    @Override
+    public String toShortString() {
         return String.format("PUSH-(%d)", value);
     }
 

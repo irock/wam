@@ -61,15 +61,21 @@ public class State {
     @Override
     public String toString() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("(");
+
+        buffer.append("s[");
 
         if (values.size() > 0) {
-            buffer.append("\n");
-            for (Map.Entry<String,Integer> entry : values.entrySet())
-                buffer.append(String.format("    %s -> %d\n", entry.getKey(), entry.getValue()));
+            boolean first = true;
+            for (Map.Entry<String,Integer> entry : values.entrySet()) {
+                if (first)
+                    first = false;
+                else
+                    buffer.append(", ");
+                buffer.append(String.format("%s ↦ %d", entry.getKey(), entry.getValue()));
+            }
         }
 
-        buffer.append(")");
+        buffer.append("]");
 
         return buffer.toString();
     }

@@ -90,4 +90,15 @@ public class Configuration implements Cloneable {
     public Stack<Operand> getOperands() {
         return operands;
     }
+
+    @Override
+    public String toString() {
+        String operandString = operands.size() > 0 ? operands.peek().toString() : "ε";
+        if (operands.size() > 1)
+            operandString += ":" + operands.get(operands.size()-2).toString();
+        if (operands.size() > 2)
+            operandString += ":e";
+
+        return String.format("< %s, %s, %s >", Instruction.codeToShortString(instructions, 1), operandString, state.toString());
+    }
 }
