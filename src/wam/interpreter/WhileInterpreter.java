@@ -13,8 +13,7 @@ import wam.code.*;
 import wam.exception.*;
 import wam.visitor.*;
 import wam.vm.*;
-import wam.parser.WhileParser;
-import wam.parser.ParseException;
+import wam.parser.*;
 
 public class WhileInterpreter {
     /**
@@ -42,6 +41,10 @@ public class WhileInterpreter {
                     configuration = machine.step(configuration);
                 }
                 System.out.println(configuration.getState());
+            } catch (TokenMgrError e) {
+                Log.logFatal("Parsing failed.");
+                Log.logFatal(e.getMessage());
+                System.exit(1);
             } catch (ParseException e) {
                 Log.logFatal("Parsing failed.");
                 Log.logFatal(e.getMessage());
