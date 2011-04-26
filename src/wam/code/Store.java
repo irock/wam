@@ -41,7 +41,9 @@ public class Store extends Instruction {
     public void execute(Configuration config) throws OperandMisMatchException {
         Operand operand = config.getOperands().pop();
 
-        if (!operand.getType().equals(Operand.Type.Integer))
+        if (operand.getType().equals(Operand.Type.Exception))
+            config.getState().setIsNormal(false);
+        else if (!operand.getType().equals(Operand.Type.Integer))
             throw new OperandMisMatchException(Operand.Type.Integer.toString(), operand.getType().toString());
 
         if (config.getState().isNormal())

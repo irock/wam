@@ -186,6 +186,12 @@ public class Instruction {
         Operand leftOp = config.getOperands().pop();
         Operand rightOp = config.getOperands().pop();
 
+        if (leftOp.getType().equals(Operand.Type.Exception) ||
+                rightOp.getType().equals(Operand.Type.Exception)) {
+            config.getOperands().push(new ExceptionOperand());
+            return;
+        }
+
         if ( !leftOp.getType().equals(Operand.Type.Integer))
             throw new OperandMisMatchException(Operand.Type.Integer.toString(), leftOp.getType().toString());
         if (!rightOp.getType().equals(Operand.Type.Integer))
@@ -206,10 +212,9 @@ public class Instruction {
                 result = new IntegerOperand(left * right);
                 break;
             case DIV:
-                if (right == 0) {
-                    config.getState().setIsNormal(false);
-                    result = new IntegerOperand(0);
-                } else
+                if (right == 0)
+                    result = new ExceptionOperand();
+                else
                     result = new IntegerOperand(left / right);
                 break;
             case LE:
@@ -229,6 +234,12 @@ public class Instruction {
     private void executeBinaryBooleanOperation(Configuration config) throws WamException {
         Operand rightOp = config.getOperands().pop();
         Operand leftOp = config.getOperands().pop();
+
+        if (leftOp.getType().equals(Operand.Type.Exception) ||
+                rightOp.getType().equals(Operand.Type.Exception)) {
+            config.getOperands().push(new ExceptionOperand());
+            return;
+        }
 
         if ( !leftOp.getType().equals(Operand.Type.Boolean))
             throw new OperandMisMatchException(Operand.Type.Boolean.toString(), leftOp.getType().toString());
@@ -253,6 +264,11 @@ public class Instruction {
 
     private void executeUnaryBooleanOperation(Configuration config) throws WamException {
         Operand leftOp = config.getOperands().pop();
+
+        if (leftOp.getType().equals(Operand.Type.Exception)) {
+            config.getOperands().push(new ExceptionOperand());
+            return;
+        }
 
         if ( !leftOp.getType().equals(Operand.Type.Boolean))
             throw new OperandMisMatchException(Operand.Type.Boolean.toString(), leftOp.getType().toString());

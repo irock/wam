@@ -15,6 +15,7 @@ public abstract class Operand {
     public enum Type {
         Integer,
         Boolean,
+        Exception,
     };
 
     /**

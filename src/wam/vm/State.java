@@ -87,7 +87,10 @@ public class State {
     public String toString() {
         StringBuffer buffer = new StringBuffer();
 
-        buffer.append("s[");
+        if (isNormal())
+            buffer.append("s[");
+        else
+            buffer.append("ŝ[");
 
         if (values.size() > 0) {
             boolean first = true;

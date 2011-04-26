@@ -71,7 +71,9 @@ public class Branch extends Instruction {
     public void execute(Configuration config) throws OperandMisMatchException {
         Operand operand = config.getOperands().pop();
 
-        if (!operand.getType().equals(Operand.Type.Boolean))
+        if (operand.getType().equals(Operand.Type.Exception))
+            config.getState().setIsNormal(false);
+        else if (!operand.getType().equals(Operand.Type.Boolean))
             throw new OperandMisMatchException(Operand.Type.Boolean.toString(), operand.getType().toString());
 
         if (config.getState().isNormal()) {
