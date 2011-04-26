@@ -1,0 +1,64 @@
+<?xml version="1.0"?> 
+<project name="wam" default="jar" basedir="."> 
+    <property name="src" value="."/> 
+    <property name="build" value="build"/>
+    <property name="classdir" value="${build}/classes"/>
+    <property name="jardir" value="${build}/jars"/>
+    <property name="docdir" value="${build}/docs"/>
+    <property name="jarfile" value="wam.jar"/>
+    <property name="parserdir" value="wam/parser"/>
+    <property name="junit.lib" value="/usr/lib/junit.jar"/>
+
+    <target name="init">  
+        <mkdir dir="${build}"/>
+        <mkdir dir="${parserdir}"/>
+    </target>
+
+    <target name="javacc">
+        <javacc
+            target="grammar/WhileParser.jj"
+            javacchome="../lib/"
+            outputdirectory="${parserdir}"
+            static="true"
+        />
+    </target>
+
+    <target name="compile" depends="init,javacc"> 
+        <mkdir dir="${classdir}"/>
+        <javac includeantruntime="true" srcdir="${src}" destdir="${classdir}"
+            debug="true" debuglevel="lines,vars,source"
+            classpath="${junit.lib}"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jardir}"/>
+        <jar destfile="${jardir}/${jarfile}" basedir="${classdir}">
+            <manifest>
+                <attribute name="Main-Class" value="wam.interpreter.WhileInterpreter"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="${jardir}/${jarfile}" fork="true">
+            <arg line="${args}"/>
+        </java>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build}"/>
+    </target>
+
+    <target name="javadoc">
+        <javadoc
+            access="private"
+            destdir="${docdir}"
+            author="true"
+            use="true"
+            >
+            <fileset dir="${src}" defaultexcludes="yes">
+                <include name="**/*.java"/>
+            </fileset>
+        </javadoc>
+    </target>
+</project>
