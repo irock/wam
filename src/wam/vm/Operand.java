@@ -14,7 +14,7 @@ public abstract class Operand {
      */
     public enum Type {
         Integer,
-        Boolean;
+        Boolean,
     };
 
     /**
@@ -27,7 +27,7 @@ public abstract class Operand {
      *
      * @param type The type of the operand.
      */
-    protected Operand(Type type) {
+    public Operand(Type type) {
         this.type = type;
     }
 

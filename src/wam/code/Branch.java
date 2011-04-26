@@ -69,10 +69,12 @@ public class Branch extends Instruction {
 
     @Override
     public void execute(Configuration config) throws OperandMisMatchException {
-        if (!config.getOperands().peek().getType().equals(Operand.Type.Boolean))
-            throw new OperandMisMatchException(Operand.Type.Boolean.toString(), config.getOperands().peek().getType().toString());
+        Operand operand = config.getOperands().pop();
 
-        BooleanOperand op = (BooleanOperand)config.getOperands().pop();
+        if (!operand.getType().equals(Operand.Type.Boolean))
+            throw new OperandMisMatchException(Operand.Type.Boolean.toString(), operand.getType().toString());
+
+        BooleanOperand op = (BooleanOperand)operand;
         config.getInstructions().addAll(op.getValue() ? ifCode : elseCode);
     }
 }
