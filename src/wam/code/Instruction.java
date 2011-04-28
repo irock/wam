@@ -177,8 +177,8 @@ public class Instruction {
     }
 
     private void executeBinaryIntegerOperation(Configuration config) throws WamException {
-        Operand rightOp = config.getOperands().pop();
         Operand leftOp = config.getOperands().pop();
+        Operand rightOp = config.getOperands().pop();
 
         if ( !leftOp.getType().equals(Operand.Type.Integer))
             throw new OperandMisMatchException(Operand.Type.Integer.toString(), leftOp.getType().toString());
@@ -214,8 +214,8 @@ public class Instruction {
     }
 
     private void executeBinaryBooleanOperation(Configuration config) throws WamException {
-        Operand leftOp = config.getOperands().pop();
         Operand rightOp = config.getOperands().pop();
+        Operand leftOp = config.getOperands().pop();
 
         if ( !leftOp.getType().equals(Operand.Type.Boolean))
             throw new OperandMisMatchException(Operand.Type.Boolean.toString(), leftOp.getType().toString());

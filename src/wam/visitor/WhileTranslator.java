@@ -59,8 +59,8 @@ public class WhileTranslator extends WhileVisitor<Stack<Instruction>> {
     public Stack<Instruction> visit(final BinaryOperation bo) throws WamException {
         Stack<Instruction> code = new Stack<Instruction>();
         code.push(new Instruction(bo, Instruction.operatorToType(bo.getOperator())));
-        code.addAll(bo.getRightHand().accept(this));
         code.addAll(bo.getLeftHand().accept(this));
+        code.addAll(bo.getRightHand().accept(this));
         return code;
     }
 
