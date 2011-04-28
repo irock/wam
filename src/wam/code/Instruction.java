@@ -171,10 +171,12 @@ public class Instruction {
                 executeUnaryBooleanOperation(config);
                 break;
             case FALSE:
-                config.getOperands().push(new BooleanOperand(false));
+                config.getOperands().push(config.getState().isNormal() ?
+                        new BooleanOperand(false) : new ExceptionOperand());
                 break;
             case TRUE:
-                config.getOperands().push(new BooleanOperand(true));
+                config.getOperands().push(config.getState().isNormal() ?
+                        new BooleanOperand(true) : new ExceptionOperand());
                 break;
             default:
                 throw new NotImplementedException(String.format("Support for operator %s is " +

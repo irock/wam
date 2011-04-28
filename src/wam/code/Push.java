@@ -39,6 +39,9 @@ public class Push extends Instruction {
 
     @Override
     public void execute(Configuration config) {
-        config.getOperands().push(new IntegerOperand(value));
+        if (config.getState().isNormal())
+            config.getOperands().push(new IntegerOperand(value));
+        else
+            config.getOperands().push(new ExceptionOperand());
     }
 }

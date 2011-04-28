@@ -38,7 +38,10 @@ public class Fetch extends Instruction {
 
     @Override
     public void execute(Configuration config) {
-        int value = config.getState().get(id);
-        config.getOperands().push(new IntegerOperand(value));
+        if (config.getState().isNormal()) {
+            int value = config.getState().get(id);
+            config.getOperands().push(new IntegerOperand(value));
+        } else
+            config.getOperands().push(new ExceptionOperand());
     }
 }
